@@ -57,9 +57,10 @@ export default function Graph() {
                 bottom: 0,
               }}
             >
-              <CartesianGrid strokeDasharray="3 3" />
+              
               <XAxis dataKey="pk" tick={{ dy: 2, dx: 22 }} interval={Math.ceil(data.length / 10)} />
               <YAxis />
+              <CartesianGrid strokeDasharray="3 3" />
               <Tooltip />
 
               {areaVisibility[0] && (
@@ -67,7 +68,7 @@ export default function Graph() {
                   name="left"
                   type="monotone"
                   dataKey="left"
-                  stackId="1"
+                  stackId="0"
                   stroke="#5ebfff"
                   fill="#5ebfff"
                 />
