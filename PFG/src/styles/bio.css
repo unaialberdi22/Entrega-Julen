@@ -1,0 +1,49 @@
+#mainB{
+    font-family: 'Raleway', sans-serif;
+    margin-bottom: 25vh;
+    padding-block-start: 5vh;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
+#mainB h1{
+    color: rgb(30, 30, 30);
+    font-size: calc(30px + 2vh);
+    text-align: center;
+    margin-block: 0;
+}
+
+#bio{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin-block-start: 5vh;
+    align-items: center;
+}
+
+.bioText{
+    color: rgb(30, 30, 30);
+    font-size: calc(1.5px + 2vmin);
+    text-align: justify;
+    width: 50%;
+}
+
+.bioText p{
+    margin: 0;
+}
+
+#picture{
+    width: 25%;
+}
+
+#picture img{
+    height: auto;
+}
+
+#curriculum{
+    width: 95%;
+    margin-left: 11vh;
+}

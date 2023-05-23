@@ -1,0 +1,72 @@
+#contact{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin-block-start: 5vh;
+    padding-top: 3vh;
+    align-items: center;
+    font-family: 'Raleway', sans-serif;
+}
+
+#contact h1{
+    color: rgb(30, 30, 30);
+    font-size: calc(30px + 2vh);
+    text-align: center;
+    margin-block: 0;
+}
+
+#contact p, #contact label, #contact input, #contact select, #contact textarea{
+    color: rgb(30, 30, 30);
+    font-size: calc(1.5px + 2vmin);
+    text-align: center;
+    
+}
+
+#contact input, #contact select, #contact textarea{
+    background-color: rgb(246, 231, 157);
+    border: 0;
+    border-radius: 1vh;
+    margin-left: 1vh;
+    overflow: hidden;
+    resize: none;
+}
+
+.contactText{
+    width: 75%;
+}
+
+.formEmail{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
+#mitad1, #mitad2{
+    width: 50%;
+    margin: 2vh;
+}
+
+#formulario{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+#formulario div{
+    margin-top: 1vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#descripcion{
+    width: 55%;
+    height: 15vh;
+}
+
+.butonEnviarForm{
+    margin-top: 1vh;
+    width: 30%;
+}

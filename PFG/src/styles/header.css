@@ -1,0 +1,110 @@
+.Header {
+    width: 20%;
+    height: 100%;
+    position: fixed;
+    text-align: center;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    background: rgb(255, 255, 255);
+    z-index: 1;
+
+  }
+  
+
+  .App-header {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    margin-left: 5vh;
+  }
+
+  #Title{
+    margin-top: 30%;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  #name{
+    cursor: pointer;
+  }
+
+  #menu{
+    margin-top: 1vh;
+  }
+
+  .ButtonMenu {
+    font-size: calc(0.2px + 1.75vmin);
+    text-align: left;
+    margin-bottom: 1vh;
+    margin-left: 2vh;
+    padding: 0;
+    border: none;
+    background-color: transparent;
+    color: rgb(30, 30, 30);
+    position: relative; /* para que el pseudo-elemento se posicione con respecto al botón */
+    cursor: pointer;
+  }
+
+   .Header p{
+    margin: 0;
+    font-family: 'Raleway', sans-serif;
+    color: rgb(30, 30, 30);
+    }
+  
+  /* .ButtonMenu::before {
+  content: "";
+  position: absolute;
+  width: 0%;
+  height: 1px;
+  bottom: 0.2vh;
+  left: 50%; 
+  transform: translateX(-50%) scaleX(0); 
+  background-color: rgb(30, 30, 30);
+  transition: width 0.1s ease-in-out, transform 0.1s ease-in-out; 
+  } */
+
+
+  .ButtonMenu p:hover{
+    color: rgb(0, 178, 254);
+    }
+  
+  /* .ButtonMenu:hover::before {
+    width: 100%;
+    transform: translateX(-50%) scaleX(1); 
+  } */
+
+  #name:disabled{
+    color: rgb(30, 30, 30);
+    font-size: calc(10px + 2vmin);
+    border: none;
+    background-color: transparent;
+    margin-left: 0.2vh;
+  }
+  
+  img {
+    width: 100%;
+    height: auto;
+  }
+
+  /* #Title{
+    margin-left: 2vh;
+  }
+
+  #menu{
+    margin-right: 2vh;
+  } */
+
+  #portraitButton, #sportButton, #analogButton, #streetButton{
+    padding-left: 1vh;
+  }
+
+  #instaIcon{
+    margin-left: 5vh;
+    cursor: pointer;
+  }

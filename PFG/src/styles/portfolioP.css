@@ -1,0 +1,42 @@
+.portfolioContainer{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.portfolioMain{
+    padding-top: 3vh;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Raleway', sans-serif;
+}
+
+.portfolioText{
+    width: 75%;
+    text-align: center;
+}
+
+.portfolioContainer img{
+    object-fit: contain;
+    width: 30%;
+    height: auto;
+    margin: 1vmin;
+    cursor: pointer;
+}
+
+.portfolioMain h1{
+    color: rgb(30, 30, 30);
+    font-size: calc(30px + 2vh);
+    text-align: center;
+    margin-block: 0;
+}
+
+.portfolioMain p{
+    color: rgb(30, 30, 30);
+    font-size: calc(1.5px + 2vmin);
+    text-align: center;
+}

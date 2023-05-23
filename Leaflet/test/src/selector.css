@@ -1,0 +1,26 @@
+#selector{
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.849);
+    width: 30vh;
+    height: fit-content;
+    z-index: 2;
+    margin-top: 10vh;
+    margin-left: 1.2vh;
+    padding-bottom: 3.5vh;
+    border-radius: 2vh;
+
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+#maps{
+    width: 100%;
+}
+
+
+#selector button{
+    margin-top: 2vh;
+}

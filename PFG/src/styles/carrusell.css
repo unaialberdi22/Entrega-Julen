@@ -1,0 +1,64 @@
+/* Slideshow */
+
+.slideshow {
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    margin-right: 10%; 
+  }
+  
+  .slideshowSlider {
+    white-space: nowrap;
+    transition: ease 750ms;
+  }
+  
+  .slide {
+    display: inline-block;
+    height: 100vh;
+    width: 100%;
+    background-size:contain;
+    background-position: center center;
+    background-repeat: no-repeat;
+  }
+  
+  /* Buttons */
+
+  #slideButtons{
+    width: 72%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    position: absolute;
+    transform: translate(0%, -50%); 
+    top: 50%;
+    z-index: 2;
+  }
+  
+  /* .slideshowDot {
+    display: inline-block;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+  
+    cursor: pointer;
+    margin: 15px 7px 0px;
+  
+    background-color: rgb(30, 30, 30);
+  }
+  
+  .slideshowDot.active {
+    background-color: rgb(255, 224, 138);
+  }
+
+  .slideshowDots {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    z-index: 0;
+    position: relative;
+    bottom: 7vh; 
+    left: 0; 
+    width: 100%;
+  } */
