@@ -14,9 +14,11 @@ const getKilometer = (req, res) => {
 
 const getData = (req, res) => {
     // const dataType = req.params.dataType;
+    const KM1 = req.params.KM1;
+    const KM2 = req.params.KM2;
     const dataType = req.params.dataType;
     const lineName = req.params.lineName;
-        db.any(`SELECT line, json_agg(json_build_array(pk, ${dataType}_l_d1, ${dataType}_r_d1)) AS data FROM trackgeometry WHERE line = $1 GROUP BY line ORDER BY line ASC;`,[lineName]).then((data)=>{
+        db.any(`SELECT line, json_agg(json_build_array(pk, ${dataType}_l_d1, ${dataType}_r_d1)) AS data FROM trackgeometry WHERE line = $1 AND pk >= $2 AND pk <= $3 GROUP BY line ORDER BY line ASC;`,[lineName, KM1, KM2]).then((data)=>{
     res.send(data);
 });
 }

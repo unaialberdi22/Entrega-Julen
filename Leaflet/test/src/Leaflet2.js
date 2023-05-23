@@ -4,6 +4,7 @@ import '../node_modules/leaflet/dist/leaflet.css';
 import markerIconPng from "leaflet/dist/images/marker-icon.png";
 import {Icon} from 'leaflet';
 import './selector.css';
+import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
 // import Graph from "./Graph";
 import AppContext from "./context/AppContext";
@@ -110,15 +111,16 @@ export default function Leaflet2() {
 
     const {setLine, setType, setData}= useContext(AppContext)
 
-    const handleClick = async (type, line) => {
+    const handleClick = async (type, line, index) => {
       setType(type);
       setLine(line);
-      await fetchGraphData(type, line);
+      const indexKM = index;
+      await fetchGraphData(type, line, indexKM);
     }
 
-    async function fetchGraphData(type, line) {
+    async function fetchGraphData(type, line, indexKM) {
       try {
-        const response = await fetch(`http://10.63.143.65:3010/Datos/${type}/${line}`, requestOptions);
+        const response = await fetch(`http://10.63.143.65:3010/Datos/${type}/${line}/${KMArray[indexKM][0]}/${KMArray[indexKM][1]}`, requestOptions);
         const result = await response.json();
         const sensordata = result.map(obj => obj.data);
         const dataArray = [];
@@ -149,7 +151,7 @@ export default function Leaflet2() {
       // handleKMChange = (event) => {
 
       // }
-     
+      
       
 
   return (
@@ -189,12 +191,15 @@ export default function Leaflet2() {
             <Polyline key={index} positions={lines} title="" color={"#" + Math.floor(Math.random() * 16777215).toString(16)} weight={7}>
               <Popup>
                 <h1>{checkboxes[index].name}</h1>
-                {/* <Slider
-                  value={KMArray[index]}
-                  onChange={handleKMChange}
+                <Slider
+                  defaultValue={[parseFloat(KMArray[index][0]), parseFloat(KMArray[index][1])]}
+                  step={0.00025}
+                  min={parseFloat(KMArray[index][0])}
+                  max={parseFloat(KMArray[index][1])}
+                  aria-label="Default" 
                   valueLabelDisplay="auto"
-                  // getAriaValueText={valuetext}
-                /> */}
+                  // onChange={handleKMChange(index)}
+                />
                 <div>
                   <p>{KMArray[index][0] + " -- " + KMArray[index][1]}</p>
                   <form>
@@ -206,7 +211,7 @@ export default function Leaflet2() {
                       </select>
                     </div>
                     <div>
-                      <button type='button' onClick={() => handleClick(document.getElementById("dataType").value, checkboxes[index].name)}>Filtrar</button>
+                      <button type='button' onClick={() => handleClick(document.getElementById("dataType").value, checkboxes[index].name, index)}>Filtrar</button>
                     </div>
                   </form>
                 </div>
