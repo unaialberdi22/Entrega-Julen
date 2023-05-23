@@ -118,7 +118,7 @@ export default function Leaflet2() {
 
     async function fetchGraphData(type, line) {
       try {
-        const response = await fetch(`http://localhost:3010/${type}/${line}`, requestOptions);
+        const response = await fetch(`http://10.63.143.65:3010/Datos/${type}/${line}`, requestOptions);
         const result = await response.json();
         const sensordata = result.map(obj => obj.data);
         const dataArray = [];
@@ -201,8 +201,8 @@ export default function Leaflet2() {
                     <div>
                       <label htmlFor="dataType">Selecciona tipo de dato:</label>
                       <select name="dataType" id="dataType">
-                        <option value="Alineacion">Alineacion</option>
-                        <option value="Niveles">Niveles</option>
+                        <option value="align">Alineacion</option>
+                        <option value="level">Niveles</option>
                       </select>
                     </div>
                     <div>
