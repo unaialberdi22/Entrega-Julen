@@ -153,8 +153,8 @@ export default function Leaflet2() {
       }
 
       const handleChange = (event, newValue, index) => {
-        const newKM = [...KMArray]; // Create a shallow copy of KMArray
-        newKM[index] = [newValue[0], newValue[1]]; // Update the desired element
+        const newKM = [...KMArray];
+        newKM[index] = [newValue[0], newValue[1]];
         setKMArray(newKM);
       };
       
