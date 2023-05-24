@@ -1,11 +1,11 @@
-import React, { useContext, useEffect, useState, useRef } from "react";
+import React, { useContext, useEffect, useState, useRef, prevState } from "react";
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from "react-leaflet";
 import '../node_modules/leaflet/dist/leaflet.css';
 import markerIconPng from "leaflet/dist/images/marker-icon.png";
 import {Icon} from 'leaflet';
 import './selector.css';
-import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
+import CircularProgress from '@mui/material/CircularProgress';
 // import Graph from "./Graph";
 import AppContext from "./context/AppContext";
 
@@ -21,6 +21,8 @@ export default function Leaflet2() {
       method: 'GET',
       redirect: 'follow'
     };
+
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
       async function fetchInitPositions() {
@@ -52,6 +54,7 @@ export default function Leaflet2() {
     }, []);
 
     useEffect(()=>{
+      setLoading(true);
       // fetchInitPositions();
       fetchKilometer()
       // fetchInitPositions()
@@ -76,6 +79,7 @@ export default function Leaflet2() {
       setCheckboxes(newCheckboxes)
       setNewPositions(newPositions);
       setLinePositions(newLinePositions)
+      setLoading(false);
     },[initPositions]) 
 
     const handleCheckboxChange = (event) => {
@@ -138,7 +142,7 @@ export default function Leaflet2() {
       }
     }
 
-      const [KMArray, setKMArray] = useState();
+      const [KMArray, setKMArray] = useState([]);
       const setKM = () => {
         const KMList = []
         kilometers.map((k, index) =>{
@@ -148,14 +152,17 @@ export default function Leaflet2() {
       setKMArray(KMList)
       }
 
-      // handleKMChange = (event) => {
-
-      // }
+      const handleChange = (event, newValue, index) => {
+        const newKM = [...KMArray]; // Create a shallow copy of KMArray
+        newKM[index] = [newValue[0], newValue[1]]; // Update the desired element
+        setKMArray(newKM);
+      };
       
       
 
-  return (
+   return KMArray.length>0 && !loading? (
     <div id="maps">
+    {console.log(KMArray)}
       <div id="selector">
         <h1>Selector de lineas</h1>
         <form>
@@ -192,20 +199,20 @@ export default function Leaflet2() {
               <Popup>
                 <h1>{checkboxes[index].name}</h1>
                 <Slider
-                  defaultValue={[parseFloat(KMArray[index][0]), parseFloat(KMArray[index][1])]}
+                  value={[parseFloat(KMArray[index][0]), parseFloat(KMArray[index][1])]}
                   step={0.00025}
-                  min={parseFloat(KMArray[index][0])}
-                  max={parseFloat(KMArray[index][1])}
-                  aria-label="Default" 
+                  min={parseFloat(kilometers[index][0])}
+                  max={parseFloat(kilometers[index][kilometers[index].length - 1])}
+                  getAriaLabel={() => "Kilometer range"} 
                   valueLabelDisplay="auto"
-                  // onChange={handleKMChange(index)}
+                  onChange={(event, newValue) => handleChange(event, newValue, index)}
                 />
                 <div>
                   <p>{KMArray[index][0] + " -- " + KMArray[index][1]}</p>
                   <form>
                     <div>
                       <label htmlFor="dataType">Selecciona tipo de dato:</label>
-                      <select name="dataType" id="dataType">
+                      <select name="dataType" id="dataType" >
                         <option value="align">Alineacion</option>
                         <option value="level">Niveles</option>
                       </select>
@@ -221,5 +228,5 @@ export default function Leaflet2() {
         ))}
       </MapContainer>
     </div>
-  );
+  ):<CircularProgress />
   }
