@@ -198,6 +198,7 @@ export default function Leaflet2() {
             <Polyline key={index} positions={lines} title="" color={"#" + Math.floor(Math.random() * 16777215).toString(16)} weight={7}>
               <Popup>
                 <h1>{checkboxes[index].name}</h1>
+                <p>{KMArray[index][0] + " -- " + KMArray[index][1]}</p>
                 <Slider
                   value={[parseFloat(KMArray[index][0]), parseFloat(KMArray[index][1])]}
                   step={0.00025}
@@ -208,7 +209,6 @@ export default function Leaflet2() {
                   onChange={(event, newValue) => handleChange(event, newValue, index)}
                 />
                 <div>
-                  <p>{KMArray[index][0] + " -- " + KMArray[index][1]}</p>
                   <form>
                     <div>
                       <label htmlFor="dataType">Selecciona tipo de dato:</label>

@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState,PureComponent } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import './graph.css';
 import AppContext from "./context/AppContext";
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip} from 'recharts';
 
 export default function Graph() {
 
@@ -17,11 +17,21 @@ export default function Graph() {
     });
   };
 
+  const [KMRef, setKMRef] = useState();
+
+  useEffect(() => {
+    if (data && data.length > 0) {
+      setKMRef([data[0].pk + " y " + data[data.length - 1].pk]);
+      console.log("KMRef is: " + KMRef)
+    }
+  }, [data]);
+
   
 
   return (
     <div className="graph">
-      <p>{"Mostrando " + type + " de la ruta " + line}</p>
+      <p>Mostrando <strong>{type}</strong> de la ruta <strong>{line}</strong></p>
+      <p>entre los kilomentros <strong>{KMRef}</strong></p>
       <div className="graph-container">
         <div id="graph-checkbox">
           <div>
@@ -47,18 +57,18 @@ export default function Graph() {
         </div>
         <div>
           <AreaChart
-              width={700}
+              width={500}
               height={400}
               data={data}
               margin={{
                 top: 10,
-                right: 40,
+                right: 55,
                 left: 0,
                 bottom: 0,
               }}
             >
               
-              <XAxis dataKey="pk" tick={{ dy: 2, dx: 22 }} interval={Math.ceil(data.length / 10)} />
+              <XAxis dataKey="pk" tick={{ dy: 2, dx: 22 }} interval={Math.ceil(data.length / 6)} />
               <YAxis />
               <CartesianGrid strokeDasharray="3 3" />
               <Tooltip />
