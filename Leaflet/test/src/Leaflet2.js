@@ -11,45 +11,92 @@ import AppContext from "./context/AppContext";
 
 // Sistema totalmente dinamico, da igual las coordenadas que le insertes, 
 // mientras los insertes en grupos, el programa se ocupara de adaptarse a la cantidad de grupos
-export default function Leaflet2() { 
+export default function Leaflet2() {
+  //Variables 
     const [initPositions, setInitPositions] = useState([])
     const [checkboxes, setCheckboxes] = useState([])
     const [newPositions, setNewPositions] = useState([])
     const [linePositions, setLinePositions] = useState([])
     const [lineNames, setLineNames] = useState([])
+    const [loading, setLoading] = useState(false)
+    const [KMArray, setKMArray] = useState([]);
+    const [kilometers, setKilometers] = useState([[0],[1],[2],[3],[4]])
+
+    const {setLine, setType, setData}= useContext(AppContext)
+
+    //Fetches
     var requestOptions = {
       method: 'GET',
       redirect: 'follow'
     };
 
-    const [loading, setLoading] = useState(false)
+    async function fetchInitPositions() {
+      try {
+        const response = await fetch("http://10.63.143.65:3010/Coordenadas", requestOptions);
+        const result = await response.json();
+        const APIPositions = result.map(obj => obj.latlon);
+        const newInitPositions = []
+        APIPositions.map((coordenadas) => {
+          newInitPositions.push(coordenadas)
+        })
+
+
+        const APILineas = result.map(obj => obj.line);
+        const newLineNames = [...lineNames]
+        APILineas.map((nombres) => {
+          newLineNames.push(nombres)
+        })
+        setLineNames(newLineNames)
+
+        console.log(newInitPositions)
+        setInitPositions(newInitPositions);
+      } catch (error) {
+        console.log('error', error);
+      }
+    }
+    
+    async function fetchKilometer() {
+      try {
+        const response = await fetch("http://10.63.143.65:3010/Kilometro", requestOptions);
+        const result = await response.json();
+        const APIKilometers = result.map(obj => obj.kilometros);
+        const initKilometers = []
+        APIKilometers.map((km) => {
+          initKilometers.push(km)
+        })
+        
+        
+        setKilometers(initKilometers)
+        console.log(kilometers)
+        setKM()
+        // setKilometers(newKilometers);
+
+      } catch (error) {
+        console.log('error', error);
+      }
+    }
+
+    async function fetchGraphData(type, line, indexKM) {
+      try {
+        const response = await fetch(`http://10.63.143.65:3010/Datos/${type}/${line}/${KMArray[indexKM][0]}/${KMArray[indexKM][1]}`, requestOptions);
+        const result = await response.json();
+        const sensordata = result.map(obj => obj.data);
+        const dataArray = [];
+        sensordata.map((dataline) => {
+          dataArray.push(dataline)
+        })
+        const processedData = [];
+        dataArray[0].map((data, index) => {
+          processedData[`${index}`] = {pk:`${data[0]}`, left:`${data[1]}`, right:`${data[2]}`};
+        })
+        setData(processedData);
+        console.log(processedData)
+      } catch (error) {
+        console.log('error', error);
+      }
+    }
 
     useEffect(() => {
-      async function fetchInitPositions() {
-        try {
-          const response = await fetch("http://10.63.143.65:3010/Coordenadas", requestOptions);
-          const result = await response.json();
-          const APIPositions = result.map(obj => obj.latlon);
-          const newInitPositions = [...initPositions]
-          APIPositions.map((coordenadas) => {
-            newInitPositions.push(coordenadas)
-          })
-  
-  
-          const APILineas = result.map(obj => obj.line);
-          const newLineNames = [...lineNames]
-          APILineas.map((nombres) => {
-            newLineNames.push(nombres)
-          })
-          setLineNames(newLineNames)
-  
-          console.log(newInitPositions)
-          setInitPositions(newInitPositions);
-        } catch (error) {
-          console.log('error', error);
-        }
-      }
-
       fetchInitPositions()
     }, []);
 
@@ -90,30 +137,6 @@ export default function Leaflet2() {
       setCheckboxes(newCheckBoxValue);
     };
 
-    const [kilometers, setKilometers] = useState([[0],[1],[2],[3],[4]])
-
-    async function fetchKilometer() {
-      try {
-        const response = await fetch("http://10.63.143.65:3010/Kilometro", requestOptions);
-        const result = await response.json();
-        const APIKilometers = result.map(obj => obj.kilometros);
-        const initKilometers = []
-        APIKilometers.map((km) => {
-          initKilometers.push(km)
-        })
-        
-        
-        setKilometers(initKilometers)
-        console.log(kilometers)
-        setKM()
-        // setKilometers(newKilometers);
-
-      } catch (error) {
-        console.log('error', error);
-      }
-    }
-
-    const {setLine, setType, setData}= useContext(AppContext)
 
     const handleClick = async (type, line, index) => {
       setType(type);
@@ -122,27 +145,7 @@ export default function Leaflet2() {
       await fetchGraphData(type, line, indexKM);
     }
 
-    async function fetchGraphData(type, line, indexKM) {
-      try {
-        const response = await fetch(`http://10.63.143.65:3010/Datos/${type}/${line}/${KMArray[indexKM][0]}/${KMArray[indexKM][1]}`, requestOptions);
-        const result = await response.json();
-        const sensordata = result.map(obj => obj.data);
-        const dataArray = [];
-        sensordata.map((dataline) => {
-          dataArray.push(dataline)
-        })
-        const processedData = [];
-        dataArray[0].map((data, index) => {
-          processedData[`${index}`] = {pk:`${data[0]}`, left:`${data[1]}`, right:`${data[2]}`};
-        })
-        setData(processedData);
-        console.log(processedData)
-      } catch (error) {
-        console.log('error', error);
-      }
-    }
-
-      const [KMArray, setKMArray] = useState([]);
+      
       const setKM = () => {
         const KMList = []
         kilometers.map((k, index) =>{
@@ -230,3 +233,9 @@ export default function Leaflet2() {
     </div>
   ):<CircularProgress />
   }
+
+
+  //ATENCION AL PLANTEAMINTO COLEGA
+  //El lunes lo que tienes que conseguir es que primero se conteste a la via que se desea, 
+  //y a partir de ahi, fijar los kilometros del slider, el tipo de dato y la fecha. Piensa algo asi tambien para la API.
+  //Hay que ser parguela para borrar el formulario JAJJAJJJAJJAJAJJAJA imbecil, esto te pasa por espabilao.
