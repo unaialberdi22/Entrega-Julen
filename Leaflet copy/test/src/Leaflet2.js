@@ -111,7 +111,7 @@ export default function Leaflet2() {
         newCheckboxes[`${lineaIndex}`] = {name: `${lineNames[lineaIndex]}`,value :true};
       })
 
-      //para el array con los IDs, coordenadas ordenadas y nombres
+      //para los para el array con los IDs, coordenadas ordenadas y nombres
       const newPositions = initPositions.map((grupoCordenadas, grupoIndex) => {
         const positions = grupoCordenadas.map((pos, index) => {
           const id = index + 1;

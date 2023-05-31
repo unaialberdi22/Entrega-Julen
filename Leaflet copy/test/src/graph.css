@@ -1,0 +1,35 @@
+#graph-checkbox{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-evenly;
+}
+#right{
+    color: #ff6857;
+}
+
+#left{
+    color: #5ebfff;
+}
+
+.graph{
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.849);
+    width: 50vh;
+    height: fit-content;
+    z-index: 2;
+    margin-top: 1.2vh;
+    margin-right: 1.2vh;
+    padding-bottom: 3.5vh;
+    border-radius: 2vh;
+    right: 0%;
+
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    align-items: center;
+}
+
+.graph p{
+    margin: 0;
+}
