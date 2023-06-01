@@ -19,7 +19,8 @@ const getData = (req, res) => {
     const dataType = req.params.dataType;
     const lineName = req.params.lineName;
     const fecha = req.params.fecha;
-        db.any(`SELECT line, json_agg(json_build_array(pk, ${dataType}_l_d1, ${dataType}_r_d1)) AS data FROM trackgeometry WHERE line = $1 AND pk >= $2 AND pk <= $3 AND track_measure_date  >= '${fecha} 00:00:00' AND track_measure_date <= '${fecha} 23:59:59.999' GROUP BY line ORDER BY line ASC;`,[lineName, KM1, KM2]).then((data)=>{
+    const via = req.params.via;
+        db.any(`SELECT line, json_agg(json_build_array(pk, ${dataType}_l_d1, ${dataType}_r_d1)) AS data FROM trackgeometry WHERE line = $1 AND pk >= $2 AND pk <= $3 AND track_measure_date  >= '${fecha} 00:00:00' AND track_measure_date <= '${fecha} 23:59:59.999' AND track = $4 GROUP BY line ORDER BY line ASC;`,[lineName, KM1, KM2, via]).then((data)=>{
     res.send(data);
 });
 }

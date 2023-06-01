@@ -13,9 +13,10 @@ function App() {
   const [line, setLine] = useState("");
   const [type, setType] = useState("");
   const [data, setData] = useState("");
+  const [fechaData, setFechaData] = useState("");
   return (
     <div id='mainScreen'>
-    <AppContext.Provider value={{line, setLine, type, setType, data, setData}}>
+    <AppContext.Provider value={{line, setLine, type, setType, data, setData, fechaData, setFechaData}}>
       <Leaflet2 />
       <Graph />
     </AppContext.Provider>

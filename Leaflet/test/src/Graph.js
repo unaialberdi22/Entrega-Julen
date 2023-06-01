@@ -5,7 +5,7 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip} from 'recharts';
 
 export default function Graph() {
 
-    const {line, type, data}=useContext(AppContext)
+    const {line, type, data, fechaData}=useContext(AppContext)
 
     const [areaVisibility, setAreaVisibility] = useState([true, true]); // Initial visibility state for each area
 
@@ -32,6 +32,7 @@ export default function Graph() {
     <div className="graph">
       <p>Mostrando <strong>{type}</strong> de la ruta <strong>{line}</strong></p>
       <p>entre los kilomentros <strong>{KMRef}</strong></p>
+      <p>del dia <strong>{fechaData}</strong></p>
       <div className="graph-container">
         <div id="graph-checkbox">
           <div>

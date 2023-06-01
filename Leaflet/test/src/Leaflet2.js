@@ -23,7 +23,7 @@ export default function Leaflet2() {
     const [kilometers, setKilometers] = useState([[0],[1],[2],[3],[4]])
     const [fechas, setFechas] = useState("2019-09-20")
 
-    const {setLine, setType, setData, line, type, data}= useContext(AppContext)
+    const {setLine, setType, setData, setFechaData}= useContext(AppContext)
 
     //Fetches
     var requestOptions = {
@@ -76,7 +76,7 @@ export default function Leaflet2() {
 
     async function fetchGraphData(type, line, indexKM, fecha) {
       try {
-        const response = await fetch(`http://10.63.143.65:3010/Datos/${type}/${line.split(",")[0]}/${KMArray[indexKM][0]}/${KMArray[indexKM][1]}/${fecha}`, requestOptions);
+        const response = await fetch(`http://10.63.143.65:3010/Datos/${type}/${line.split(",")[0]}/${KMArray[indexKM][0]}/${KMArray[indexKM][1]}/${fecha}/${line.split(",")[1]}`, requestOptions);
         const result = await response.json();
         const sensordata = result.map(obj => obj.data);
         const dataArray = [];
@@ -90,6 +90,7 @@ export default function Leaflet2() {
         setData(processedData);
         console.log(processedData)
       } catch (error) {
+        alert("No hay datos en la fecha seleccionada");
         console.log('error', error);
       }
     }
@@ -117,7 +118,7 @@ export default function Leaflet2() {
           const id = index + 1;
           const position = [pos[1], pos[0]];
           const name = "grupo " + (grupoIndex + 1);
-          return {id, position: position, name };
+          return {id, position: position, name};
         });
         return positions;
       });
@@ -142,6 +143,7 @@ export default function Leaflet2() {
     const handleClick = async (type, line, index, fecha) => {
       setType(type);
       setLine(line);
+      setFechaData(fecha);
       const indexKM = index;
       await fetchGraphData(type, line, indexKM, fecha);
     }
@@ -161,7 +163,7 @@ export default function Leaflet2() {
         setKMArray(newKM);
       };
 
-      const changeDate = (event, fecha) => {
+      const changeDate = (fecha) => {
         setFechas(fecha);
       }
       
