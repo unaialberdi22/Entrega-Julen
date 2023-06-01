@@ -207,7 +207,21 @@ export default function Leaflet2() {
             <Polyline key={index} positions={lines} title="" color={"#" + Math.floor(Math.random() * 16777215).toString(16)} weight={7}>
               <Popup>
                 <h1>{checkboxes[index].name}</h1>
-
+                <div>
+                  <form>
+                    <div>
+                      <label htmlFor="fecha">Selecciona fecha:</label>
+                      <input type="date" id="fecha" name="fecha" value={fechas} min="2019-09-20" max="2023-06-01" onInput={() => changeDate(document.getElementById("fecha").value)}></input>
+                    </div>
+                    <div>
+                      <label htmlFor="dataType">Selecciona tipo de dato:</label>
+                      <select name="dataType" id="dataType" >
+                        <option value="align">Alineacion</option>
+                        <option value="level">Niveles</option>
+                      </select>
+                    </div>
+                  </form>
+                </div>
                 
                 <p>{KMArray[index][0] + " -- " + KMArray[index][1]}</p>
                 <Slider
