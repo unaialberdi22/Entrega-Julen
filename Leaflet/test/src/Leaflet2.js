@@ -23,7 +23,7 @@ export default function Leaflet2() {
     const [kilometers, setKilometers] = useState([[0],[1],[2],[3],[4]])
     const [fechas, setFechas] = useState("2019-09-20")
 
-    const {setLine, setType, setData, setFechaData}= useContext(AppContext)
+    const {setLine, setType, setData, setFechaData, setDisplay}= useContext(AppContext)
 
     //Fetches
     var requestOptions = {
@@ -88,9 +88,11 @@ export default function Leaflet2() {
           processedData[`${index}`] = {pk:`${data[0]}`, left:`${data[1]}`, right:`${data[2]}`};
         })
         setData(processedData);
-        console.log(processedData)
+        console.log(processedData);
+        setDisplay(true);
       } catch (error) {
         alert("No hay datos en la fecha seleccionada");
+        setDisplay(false);
         console.log('error', error);
       }
     }
