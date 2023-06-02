@@ -3,5 +3,5 @@ import {getAllCoordinates, getData, getKilometer} from "./Controllers/controller
 const Router = router();
 Router.get("/Coordenadas", getAllCoordinates)
 Router.get("/Datos/:dataType/:lineName/:KM1/:KM2/:fecha/:via", getData)
-Router.get("/Kilometro/:fecha", getKilometer)
+Router.get("/Kilometro", getKilometer)
 export default Router;

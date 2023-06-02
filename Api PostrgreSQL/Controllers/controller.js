@@ -7,10 +7,12 @@ const getAllCoordinates = (req, res) => {
 
 const getKilometer = (req, res) => {
     const fecha = req.params.fecha;
-    db.any(`SELECT line, track, json_agg(ARRAY[(pk)]) as kilometros FROM trackgeometry WHERE track_measure_date >= '${fecha} 00:00:00' AND track_measure_date <= '${fecha} 23:59:59.999' GROUP BY line, track ORDER BY line ASC;`).then((data)=>{
+    db.any(`SELECT line, track, json_agg(ARRAY[(pk)]) as kilometros FROM trackgeometry GROUP BY line, track ORDER BY line ASC;`).then((data)=>{
     res.send(data);
 });
 }
+
+// WHERE track_measure_date >= '${fecha} 00:00:00' AND track_measure_date <= '${fecha} 23:59:59.999'
 
 const getData = (req, res) => {
     // const dataType = req.params.dataType;
@@ -30,3 +32,25 @@ export{
     getKilometer,
     getData
 }
+
+// SELECT
+//   l.line,
+//   t.track,
+//   COALESCE(json_agg(ARRAY[(tg.pk)]), '[]') AS kilometros
+// FROM
+//   (
+//     SELECT DISTINCT line
+//     FROM trackgeometry
+//   ) l
+// CROSS JOIN
+//   (
+//     SELECT DISTINCT track
+//     FROM trackgeometry
+//   ) t
+// LEFT JOIN
+//   trackgeometry tg ON tg.line = l.line AND tg.track = t.track AND tg.track_measure_date >= '2023-03-08 00:00:00' AND tg.track_measure_date <= '2023-03-08 23:59:59.999'
+// GROUP BY
+//   l.line,
+//   t.track
+// ORDER BY
+//   t.track ASC;
