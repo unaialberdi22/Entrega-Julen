@@ -55,7 +55,7 @@ export default function Leaflet2() {
     
     async function fetchKilometer() {
       try {
-        const response = await fetch("http://10.63.143.65:3010/Kilometro", requestOptions);
+        const response = await fetch('http://10.63.143.65:3010/Kilometro', requestOptions);
         const result = await response.json();
         const APIKilometers = result.map(obj => obj.kilometros);
         const initKilometers = []
@@ -91,8 +91,8 @@ export default function Leaflet2() {
         console.log(processedData);
         setDisplay(true);
       } catch (error) {
-        alert("No hay datos en la fecha seleccionada");
         setDisplay(false);
+        alert("No hay datos en la fecha seleccionada");
         console.log('error', error);
       }
     }
@@ -101,8 +101,9 @@ export default function Leaflet2() {
 
     useEffect(() => {
       fetchInitPositions()
+      
     }, []);
-
+      
     useEffect(()=>{
       setLoading(true);
       // fetchInitPositions();
@@ -166,6 +167,7 @@ export default function Leaflet2() {
       };
 
       const changeDate = (fecha) => {
+        fetchKilometer(fecha);
         setFechas(fecha);
       }
       
@@ -234,22 +236,7 @@ export default function Leaflet2() {
                   onChange={(event, newValue) => handleChange(event, newValue, index)}
                 />
                 <div>
-                  <form>
-                    <div>
-                      <label htmlFor="dataType">Selecciona tipo de dato:</label>
-                      <select name="dataType" id="dataType" >
-                        <option value="align">Alineacion</option>
-                        <option value="level">Niveles</option>
-                      </select>
-                    </div>
-                    <div>
-                    <label htmlFor="fecha">Selecciona fecha:</label>
-                      <input type="date" id="fecha" name="fecha" value={fechas} min="2019-09-20" max="2023-05-31" onInput={() => changeDate(document.getElementById("fecha").value)}></input>
-                    </div>
-                    <div>
-                      <button type='button' onClick={() => handleClick(document.getElementById("dataType").value, checkboxes[index].name, index, document.getElementById("fecha").value)}>Filtrar</button>
-                    </div>
-                  </form>
+                  <button type='button' onClick={() => handleClick(document.getElementById("dataType").value, checkboxes[index].name, index, document.getElementById("fecha").value)}>Filtrar</button>
                 </div>
               </Popup>
             </Polyline>
