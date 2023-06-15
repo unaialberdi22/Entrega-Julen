@@ -1,185 +1,254 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef, prevState } from "react";
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from "react-leaflet";
 import '../node_modules/leaflet/dist/leaflet.css';
 import markerIconPng from "leaflet/dist/images/marker-icon.png";
 import {Icon} from 'leaflet';
 import './selector.css';
+import Slider from '@mui/material/Slider';
+import CircularProgress from '@mui/material/CircularProgress';
+// import Graph from "./Graph";
+import AppContext from "./context/AppContext";
 
 // Sistema totalmente dinamico, da igual las coordenadas que le insertes, 
 // mientras los insertes en grupos, el programa se ocupara de adaptarse a la cantidad de grupos
-// que contenga el array de coordenadas. Comprobar el array de colores, que tenga suficientes como para coger
+export default function Leaflet2() {
+  //Variables 
+    const [initPositions, setInitPositions] = useState([])
+    const [checkboxes, setCheckboxes] = useState([])
+    const [newPositions, setNewPositions] = useState([])
+    const [linePositions, setLinePositions] = useState([])
+    const [lineNames, setLineNames] = useState([])
+    const [loading, setLoading] = useState(false)
+    const [KMArray, setKMArray] = useState([]);
+    const [kilometers, setKilometers] = useState([[0],[1],[2],[3],[4]])
+    const [fechas, setFechas] = useState("2023-03-08")
 
-function Leaflet() { 
+    const {setLine, setType, setData, setFechaData, setDisplay, data}= useContext(AppContext)
 
-  const [initPositions, setInitPositions] = useState([
-    [
-      [-2.925472229230246, 43.269686320921885],
-      [-2.919966088815328, 43.266827308860165],
-      [-2.921339724891855, 43.259172695609294],
-      [-2.91370608318417, 43.263707791816131],
-      [-2.906345071537429, 43.259094052322453],
-      [-2.898040340448798, 43.258926279977224],
-      [-2.889662208959138, 43.251077679952388],
-      [-2.891151188523007, 43.245687993362054],
-      [-2.879134860457787, 43.240190398402675],
-      [-2.853863784796842, 43.228763958037547],
-      [-2.821609551427414, 43.217607097080119],
-      [-2.794381178746385, 43.206532729196354],
-      [-2.775383757582811, 43.207072293599261],
-      [-2.735835939931341, 43.216453662206682],
-      [-2.696912755839235, 43.194643257327478],
-      [-2.637624109622473, 43.170766218319926],
-      [-2.61290075396802, 43.165450869258386],
-      [-2.574572863338634, 43.168429433543501],
-      [-2.552183074356933, 43.169661488307028],
-      [-2.500983571638703, 43.184962313878074],
-      [-2.498751812686783, 43.183098665809808],
-      [-2.495546801308921, 43.179486144394211],
-      [-2.487341531630203, 43.180675633153008],
-      [-2.479929254457347, 43.184750733530365],
-      [-2.474404682985117, 43.18459788815715],
-      [-2.464778744677856, 43.187303217223892],
-      [-2.455089891741135, 43.190365062524251],
-      [-2.415815965117166, 43.213610893879384],
-      [-2.408365293596088, 43.217858755597923],
-      [-2.399557245471796, 43.235810396536962],
-      [-2.387863414813185, 43.252234425093782],
-      [-2.355245889465669, 43.29473618607522],
-      [-2.270746731390782, 43.278410739472442],
-      [-2.251418719729452, 43.291530094352581],
-      [-2.171221541776058, 43.284319473193896],
-      [-2.160370485803616, 43.283270237198515],
-      [-2.124827193888969, 43.274027564257572],
-      [-2.052995108506809, 43.268715161845741],
-      [-2.00750381582472, 43.278728944528389],
-      [-1.994711637786621, 43.292034231822264],
-      [-2.000688822480261, 43.302434742128682],
-      [-1.981688508491555, 43.313114155293519],
-    ],
+    //Fetches
+    var requestOptions = {
+      method: 'GET',
+      redirect: 'follow'
+    };
 
-    [ 
-      [-2.020138871628642, 43.270707352362102],
-      [-2.00750381582472, 43.278728944528389],
-      [-1.994711637786621, 43.292034231822264],
-      [-2.000688822480261, 43.302434742128682],
-      [-1.981688508491555, 43.313114155293519],
-      [-1.975260984398798, 43.302164359073373],
-      [-1.967593453917604, 43.310594344636918],
-      [-1.954855672910856, 43.314160081756945],
-      [-1.937057458138263, 43.319363062185133],
-      [-1.917401862121078, 43.317970189696076],
-      [-1.906054809648745, 43.312381508425005],
-      [-1.899180932045708, 43.311221169680415],
-      [-1.889298629014347, 43.308246106587774],
-      [-1.879190345214565, 43.308539708191923],
-      [-1.817825586172406, 43.329963517106691],
-      [-1.803189472827824, 43.336557689844419],
-      [-1.801325757501328, 43.339451163491368],
-    ],
+    async function fetchInitPositions() {
+      try {
+        const response = await fetch("http://10.63.143.65:3010/Coordenadas", requestOptions);
+        const result = await response.json();
+        const APIPositions = result.map(obj => obj.latlon);
+        const newInitPositions = []
+        APIPositions.map((coordenadas) => {
+          newInitPositions.push(coordenadas)
+        })
+        setInitPositions(newInitPositions);
 
-    [
-      [-2.921551693375199, 43.253622341651841],
-      [-2.905720796998542, 43.247070535150684],
-      [-2.889662208959138, 43.251077679952388],
-      [-2.891151188523007, 43.245687993362054],
-      [-2.879134860457787, 43.240190398402675],
-      [-2.853863784796842, 43.228763958037547],
-      [-2.821609551427414, 43.217607097080119],
-      [-2.794381178746385, 43.206532729196354],
-      [-2.775383757582811, 43.207072293599261],
-      [-2.734818820088412, 43.221843348796909],
-      [-2.692749146614092, 43.252248253765288],
-      [-2.689552073622523, 43.286794745182462],
-      [-2.680271836347266, 43.306757127023744],
-      [-2.676245300061875, 43.313950366325244],
-      [-2.676636135033055, 43.319701951821322],
-      [-2.673806454728123, 43.332111199378573],
-      [-2.69036455270897, 43.367921952142744],
-      [-2.693091514550671, 43.380179694639487],
-      [-2.693917241361212, 43.391091176047375],
-      [-2.700951573540277, 43.40884897759269],
-      [-2.723305442897374, 43.417822419562448],
-    ],
-    [
-      [-2.251418719729452, 43.291530094352581],
-			[-2.171221541776058, 43.284319473193896],
-			[-2.160370485803616, 43.283270237198515],
-			[-2.124827193888969, 43.274027564257572],
-			[-2.052995108506809, 43.268715161845741],
-			[-2.00750381582472, 43.278728944528389],
-			[-1.994711637786621, 43.292034231822264],
-			[-2.000688822480261, 43.302434742128682],
-			[-1.981688508491555, 43.313114155293519],
-    ],                        
-    ]);
-
-    const [checkboxes, setCheckboxes] = useState(() => {
-
-      const initialCheckboxes = {};
-      const arrayLength = initPositions.length;
-      for (let i = 1; i <= arrayLength; i++) {
-        initialCheckboxes.name = [`linea${i}`];
-        initialCheckboxes.value = true;
+        const APILineas = result.map(obj => obj.line);
+        const APIVias = result.map(obj => obj.track);
+        const newLineNames = APILineas.map((element1, index) => [element1, APIVias[index]]);
+        setLineNames(newLineNames)
+        console.log(newLineNames)
+       
+      } catch (error) {
+        console.log('error', error);
       }
-      console.log(initialCheckboxes)
-      return initialCheckboxes;
-    });
+    }
     
+    async function fetchKilometer(fecha) {
+      
+      console.log("dentro de fetch con la fecha: " + fecha)
+      try {
+        const response = await fetch(`http://10.63.143.65:3010/Kilometro/${fecha}`, requestOptions);
+        const result = await response.json();
+        const APIKilometers = result.map(obj => obj.kilometros);
+        const initKilometers = []
+        APIKilometers.map((km) => {
+          initKilometers.push(km)
+        })
+        
+        setKilometers(initKilometers)
+        console.log(initKilometers)
+        setKM()
+        // setKilometers(newKilometers);
+
+      } catch (error) {
+        console.log('error', error);
+      }
+    }
+
+    async function fetchGraphData(type, line, indexKM, fecha) {
+      try {
+        const response = await fetch(`http://10.63.143.65:3010/Datos/${type}/${line.split(",")[0]}/${KMArray[indexKM][0]}/${KMArray[indexKM][1]}/${fecha}/${line.split(",")[1]}`, requestOptions);
+        const result = await response.json();
+        const sensordata = result.map(obj => obj.data);
+        const dataArray = [];
+        sensordata.map((dataline) => {
+          dataArray.push(dataline)
+        })
+        const processedData = [];
+        dataArray[0].map((data, index) => {
+          processedData[`${index}`] = {pk:`${data[0]}`, left:`${data[1]}`, right:`${data[2]}`};
+        })
+        setData(processedData);
+        console.log(processedData);
+        setDisplay(true);
+      } catch (error) {
+        setDisplay(false);
+        alert("No hay datos en la fecha seleccionada");
+        console.log('error', error);
+      }
+    }
+
+    //use efects
+
+    useEffect(() => {
+      fetchInitPositions()
+      
+    }, []);
+      
+    useEffect(()=>{
+      setLoading(true);
+      // fetchInitPositions();
+      fetchKilometer(fechas)
+      // fetchInitPositions()
+      //para los checkboxes
+      const newCheckboxes = [];
+      initPositions.map((linea, lineaIndex) => {
+        newCheckboxes[`${lineaIndex}`] = {name: `${lineNames[lineaIndex]}`,value :true};
+      })
+
+      //para el array con los IDs, coordenadas ordenadas y nombres
+      const newPositions = initPositions.map((grupoCordenadas, grupoIndex) => {
+        const positions = grupoCordenadas.map((pos, index) => {
+          const id = index + 1;
+          const position = [pos[1], pos[0]];
+          const name = "grupo " + (grupoIndex + 1);
+          return {id, position: position, name};
+        });
+        return positions;
+      });
+
+      const newLinePositions = newPositions.map((marker) => marker.map((line) => line.position)); 
+      setCheckboxes(newCheckboxes)
+      setNewPositions(newPositions);
+      setLinePositions(newLinePositions)
+      setLoading(false);
+    },[initPositions]) 
 
     const handleCheckboxChange = (event) => {
-      const { name, checked } = event.target;
-      setCheckboxes((prevState) => ({ ...prevState, [name]: checked }));
+      const index = parseInt(event.target.id);
+      const newCheckBoxValue = [...checkboxes];
+      const newValue = {...newCheckBoxValue[index],value: !newCheckBoxValue[index].value,};
+      newCheckBoxValue.splice(index, 1, newValue);
+      setCheckboxes(newCheckBoxValue);
     };
-    
-    const newPositions = initPositions.map((grupoCordenadas, grupoIndex) => {
-      const grupo = grupoIndex + 1;
-      const positions = grupoCordenadas.map((pos, index) => {
-        const id = index + 1;
-        const position = [pos[1], pos[0]];
-        const name = "grupo " + grupo;
-        return { id, position: position, name };
-      });
-      return positions;
-    });
 
-    const linePositions = newPositions.map((marker) => marker.map((line) => line.position));
-  
-    return (
-        <div>
-        <div id="selector">
-            <h1>Selector de lineas</h1>
-                <form>
-                {Object.keys(checkboxes).map((name) => (
-                  <div key={name}>
-                  <input type="checkbox" id={name} name={name} value={name} checked={checkboxes[name]} onChange={handleCheckboxChange}/>
-                  <label for={name}>{name}</label><br></br>
-                  </div>
-                ))}
-                </form>
-        </div>
-      <MapContainer center={[43.29473618607522, -2.355245889465669]} zoom={11} style={{ height: "100vh" }}>
-        <TileLayer url="https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png" />
+    console.log(checkboxes)
+
+    const handleClick = async (type, line, index, fecha) => {
+      setType(type);
+      setLine(line);
+      setFechaData(fecha);
+      const indexKM = index;
+      await fetchGraphData(type, line, indexKM, fecha);
+    }
+
+      const setKM = () => {
+        const KMList = []
+        kilometers.map((k, index) =>{
+        const KMValue = [kilometers[index][0],kilometers[index][kilometers[index].length - 1]]
+        KMList.push(KMValue)
+      });
+      setKMArray(KMList)
+      }
+
+      const handleChange = (event, newValue, index) => {
+        const newKM = [...KMArray];
+        newKM[index] = [newValue[0], newValue[1]];
+        setKMArray(newKM);
+      };
+
+      const changeDate = (fecha) => {
+        fetchKilometer(fecha);
+        setFechas(fecha);
+      }
       
-        {newPositions.map((marker, index) => (
-          checkboxes[`linea${index + 1}`] && marker.map((data)=>(
-            <Marker key={data.id} position={data.position} icon={new Icon({iconUrl: markerIconPng, iconSize: [25, 41], iconAnchor: [12.5, 41]})} >
-            <Popup>{data.name}</Popup>
-          </Marker>
-          ))
-        ))};
-        {linePositions.map((lines, index)=>(
-          checkboxes[`linea${index + 1}`] ? (
-          <Polyline positions={lines} title="" color={"#"+ Math.floor(Math.random()*16777215).toString(16)} weight={7}>
-          <Popup>
-          <h1>{`linea${index + 1}`}</h1>
-          </Popup>
-          </Polyline>
-          ) : null
-        ))};
-        </MapContainer>
+   return KMArray.length>0 && !loading? (
+    <div id="maps">
+    {console.log(KMArray)}
+      <div id="selector">
+        <h1>Selector de lineas</h1>
+        <form>
+          {checkboxes.map((item, index) => {
+            return (
+              <div key={item.name}>
+                <input
+                  type="checkbox"
+                  id={index}
+                  name={item.name}
+                  value={item.value}
+                  checked={item.value}
+                  onChange={handleCheckboxChange}
+                />
+                <label htmlFor={item.name}>{item.name}</label>
+                <br />
+              </div>
+            );
+          })}
+        </form>
       </div>
-    );
+      <MapContainer center={[43.29473618607522, -2.355245889465669]} zoom={11}>
+        <TileLayer url="https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png" />
+  
+        {newPositions.map((marker, index) =>
+          checkboxes[index]?.value && marker.map((data) => (
+            <Marker key={data.id} position={data.position} icon={new Icon({ iconUrl: markerIconPng, iconSize: [25, 41], iconAnchor: [12.5, 41] })} />
+          ))
+        )}
+        {console.log(checkboxes)}
+        {linePositions.map((lines, index) => (
+          checkboxes[index]?.value ? (
+            <Polyline key={index} positions={lines} title="" color={"#" + Math.floor(Math.random() * 16777215).toString(16)} weight={7}>
+              <Popup>
+                <h1>{checkboxes[index].name}</h1>
+                <div>
+                  <form>
+                    <div>
+                      <label htmlFor="fecha">Selecciona fecha:</label>
+                      <input type="date" id="fecha" name="fecha" value={fechas} min="2019-09-20" max="2023-06-01" onInput={() => changeDate(document.getElementById("fecha").value)}></input>
+                    </div>
+                    <div>
+                      <label htmlFor="dataType">Selecciona tipo de dato:</label>
+                      <select name="dataType" id="dataType" >
+                        <option value="align">Alineacion</option>
+                        <option value="level">Niveles</option>
+                      </select>
+                    </div>
+                  </form>
+                </div>
+                {console.log(kilometers[index][0])}
+                  <p>{KMArray[index][0] + " -- " + KMArray[index][1]}</p>
+                  <Slider
+                    value={[parseFloat(KMArray[index][0]), parseFloat(KMArray[index][1])]}
+                    step={0.00025}
+                    min={parseFloat(kilometers[index][0])}
+                    max={parseFloat(kilometers[index][kilometers[index].length - 1])}
+                    getAriaLabel={() => "Kilometer range"} 
+                    valueLabelDisplay="auto"
+                    onChange={(event, newValue) => handleChange(event, newValue, index)}
+                  />
+                  <div>
+                    <button type='button' onClick={() => handleClick(document.getElementById("dataType").value, checkboxes[index].name, index, document.getElementById("fecha").value)}>Filtrar</button>
+                  </div>
+              </Popup>
+            </Polyline>
+          ) : null
+        ))}
+      </MapContainer>
+    </div>
+  ):<CircularProgress />
   }
 
-  
-export default Leaflet;
+  //ATENCION AL PLANTEAMINTO COLEGA
+  //El lunes lo que tienes que conseguir es que primero se conteste a la via que se desea, 
+  //y a partir de ahi, fijar los kilometros del slider, el tipo de dato y la fecha. Piensa algo asi tambien para la API.
+  //Hay que ser parguela para borrar el formulario JAJJAJJJAJJAJAJJAJA imbecil, esto te pasa por espabilao.

@@ -7,7 +7,7 @@ const getAllCoordinates = (req, res) => {
 
 const getKilometer = (req, res) => {
     const fecha = req.params.fecha;
-    db.any(`SELECT line, track, json_agg(ARRAY[(pk)]) as kilometros FROM trackgeometry GROUP BY line, track ORDER BY line ASC;`).then((data)=>{
+    db.any(`WITH lines AS (SELECT DISTINCT line FROM public.trackgeometry), tracks AS (SELECT DISTINCT track FROM public.trackgeometry), combined AS (SELECT lines.line, tracks.track, COALESCE(json_agg(ARRAY[tg.pk]), '[]') AS kilometros FROM lines CROSS JOIN tracks LEFT JOIN public.trackgeometry tg ON tg.line = lines.line AND tg.track = tracks.track AND tg.track_measure_date >= '${fecha} 00:00:00' AND tg.track_measure_date <= '${fecha} 23:59:59.999' GROUP BY lines.line, tracks.track) SELECT c.line, c.track, c.kilometros FROM combined c WHERE (c.line, c.track) IN (SELECT DISTINCT line, track FROM public.trackgeometry) ORDER BY c.line ASC, c.track ASC NULLS LAST;`).then((data)=>{
     res.send(data);
 });
 }
